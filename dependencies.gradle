@@ -41,7 +41,7 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:TinkersMechworks:0.2.16.4:dev") {
         transitive = false
     }
-    compileOnly("com.github.GTNewHorizons:ProjectRed:4.7.9:dev") {
+    compileOnly("com.github.GTNewHorizons:ProjectRed:4.7.9-GTNH:dev") {
         transitive = false
     }
     compileOnly("com.github.GTNewHorizons:BloodMagic:1.3.20:dev") {
