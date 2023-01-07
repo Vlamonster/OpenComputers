@@ -11,9 +11,13 @@ object ModThaumicEnergistics extends ModProxy {
   override def initialize(): Unit = {
     Driver.add(DriverController)
     Driver.add(DriverBlockInterface)
+    Driver.add(DriverEssentiaExportBus)
+    Driver.add(DriverEssentiaImportBus)
 
     Driver.add(DriverController.Provider)
     Driver.add(DriverBlockInterface.Provider)
+    Driver.add(DriverEssentiaExportBus.Provider)
+    Driver.add(DriverEssentiaImportBus.Provider)
     Driver.add(ConvertAspectCraftable)
   }
 }
