@@ -13,7 +13,7 @@ class CoreModContainer extends DummyModContainer({
   md.name = "OpenComputers (Core)"
   md.url = "https://oc.cil.li/"
   md.description = "OC core mod used for class transformer and as API owner to avoid cyclic dependencies."
-  md
+  md.parent = "OpenComputers"
 }) {
   override def registerBus(bus: EventBus, controller: LoadController) = true
 }
