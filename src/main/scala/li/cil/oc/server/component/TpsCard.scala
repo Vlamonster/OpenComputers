@@ -1,7 +1,6 @@
 package li.cil.oc.server.component
 
 import java.util
-
 import cofh.CoFHCore
 import li.cil.oc.{Constants, api}
 import li.cil.oc.api.driver.DeviceInfo
@@ -12,6 +11,7 @@ import li.cil.oc.api.prefab
 import li.cil.oc.server.component.DebugCard.AccessContext
 import net.minecraft.entity.Entity
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.world.WorldServer
 import net.minecraftforge.common.DimensionManager
 
 import scala.collection.convert.WrapAsJava._
@@ -40,6 +40,12 @@ class TpsCard (val host: EnvironmentHost) extends prefab.ManagedEnvironment with
 
   private def getTickTimeSum(samples: Array[Long]) = samples.sum.toDouble / samples.length
 
+  private def withWorld(dim:Int, f: WorldServer => Array[AnyRef] ) : Array[AnyRef] =
+    CoFHCore.server.worldServers.find(w => w.provider.dimensionId == dim) match {
+      case Some(w) => f(w)
+      case _ => result(null, "Dimension not loaded: " + dim.toString)
+    }
+
   @Callback(doc = """function(dimension:number):number -- ms taken by the dimension.""")
   def getTickTimeInDim(context: Context, args: Arguments): Array[AnyRef] = {
     val dim = args.optInteger(0, world.provider.dimensionId)
@@ -59,10 +65,9 @@ class TpsCard (val host: EnvironmentHost) extends prefab.ManagedEnvironment with
     result(DimensionManager.getWorlds.map( w => (w.provider.dimensionId, getTickTimeSum(CoFHCore.server.worldTickTimes.get(w.provider.dimensionId)) * 1.0E-6D)).toMap)
 
   @Callback(doc = """function(dimension:number):string -- Returns the name corresponding to the dimension.""")
-  def getNameForDim(context: Context, args: Arguments): Array[AnyRef] = {
-    val dim = args.checkInteger(0)
-    result(DimensionManager.getWorld(dim).provider.getDimensionName)
-  }
+  def getNameForDim(context: Context, args: Arguments): Array[AnyRef] =
+    withWorld(args.checkInteger(0), w => result(w.provider.getDimensionName))
+
 
   @Callback(doc = """function(time:number):number -- Takes a number as parameter (in ms), and returns the actual TPS corresponding to it.""")
   def convertTickTimeIntoTps(context: Context, args: Arguments): Array[AnyRef] = {
@@ -87,26 +92,22 @@ class TpsCard (val host: EnvironmentHost) extends prefab.ManagedEnvironment with
     result(CoFHCore.server.worldServers.length)
 
   @Callback(doc = """function(dimension:number):table -- Returns a table where the index is the name of the entity class, and the value the amount of entities in that dim.""")
-  def getEntitiesListForDim(context: Context, args: Arguments): Array[AnyRef] = {
-    val dim = args.checkInteger(0)
-    val ents = CoFHCore.server.worldServers(dim).loadedEntityList
-    result(ents.foldLeft(Map[String, Int]())((m, e) =>
-      m.updated(e.getClass.getName, m.getOrElse(e.getClass.getName, 0) + 1) ) )
-  }
+  def getEntitiesListForDim(context: Context, args: Arguments): Array[AnyRef] =
+    withWorld(args.checkInteger(0), w =>
+      result(w.loadedEntityList.foldLeft(Map[String, Int]())((m, e) =>
+          m.updated(e.getClass.getName, m.getOrElse(e.getClass.getName, 0) + 1))))
+
 
   @Callback(doc = """function(dimension:number):table -- Returns a table where the index is the name of the TE class, and the value the amount of TE in that dim.""")
-  def getTileEntitiesListForDim(context: Context, args: Arguments): Array[AnyRef] = {
-    val dim = args.checkInteger(0)
-    val ents = CoFHCore.server.worldServers(dim).loadedTileEntityList
-    result(ents.foldLeft(Map[String, Int]())((m, e) =>
-      m.updated(e.getClass.getName, m.getOrElse(e.getClass.getName, 0) + 1) ) )
-  }
+  def getTileEntitiesListForDim(context: Context, args: Arguments): Array[AnyRef] =
+    withWorld(args.checkInteger(0), w =>
+      result(w.loadedTileEntityList.foldLeft(Map[String, Int]())((m, e) =>
+      m.updated(e.getClass.getName, m.getOrElse(e.getClass.getName, 0) + 1))))
+
 
   @Callback(doc = """function(dimension:number):number -- Returns the amount of chunks loaded in that dimension.""")
-  def getChunksLoadedForDim(context: Context, args: Arguments): Array[AnyRef] = {
-    val dim = args.checkInteger(0)
-    result(CoFHCore.server.worldServers(dim).getChunkProvider.getLoadedChunkCount)
-  }
+  def getChunksLoadedForDim(context: Context, args: Arguments): Array[AnyRef] =
+    withWorld(args.checkInteger(0), w => result(w.getChunkProvider.getLoadedChunkCount))
 
   @Callback(doc = """function(className:string, dimension:number):table -- Returns return a table with all the coordinates of the entities matching the class name in that dimension.""")
   def getCoordinatesForEntityClassInDim(context: Context, args: Arguments): Array[AnyRef] =
@@ -115,10 +116,9 @@ class TpsCard (val host: EnvironmentHost) extends prefab.ManagedEnvironment with
       case _ =>
         val className = args.checkString(0)
         val dim = args.checkInteger(1)
-        val ents = CoFHCore.server.worldServers(dim).loadedEntityList.filter(e => e.getClass.getName.equals(className))
-        result(ents.map{ case e : Entity => (e.posX, e.posY, e.posZ) })
+        withWorld(dim, w => result(w.loadedEntityList.filter(e => e.getClass.getName.equals(className)).map{
+            case e : Entity => (e.posX, e.posY, e.posZ) }))
     }
-
 
   override def load(nbt: NBTTagCompound): Unit = {
     super.load(nbt)
