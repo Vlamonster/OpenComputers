@@ -42,7 +42,7 @@ object KeyBindings {
 
   def extendedTooltip = FMLClientHandler.instance.getClient.gameSettings.keyBindSneak
 
-  val materialCosts = new KeyBinding("key.materialCosts", Keyboard.KEY_LMENU, OpenComputers.Name)
+  val materialCosts = new KeyBinding("key.materialCosts", Keyboard.KEY_NONE, OpenComputers.Name)
 
-  val clipboardPaste = new KeyBinding("key.clipboardPaste", Keyboard.KEY_INSERT, OpenComputers.Name)
+  val clipboardPaste = new KeyBinding("key.clipboardPaste", Keyboard.KEY_NONE, OpenComputers.Name)
 }
