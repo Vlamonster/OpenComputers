@@ -1,5 +1,5 @@
 minecraft {
-    replace "@VERSION@", versionDetails().lastTag
+    injectedTags.put "@VERSION@", versionDetails().lastTag
 }
 
 tasks.withType(ScalaCompile) {
