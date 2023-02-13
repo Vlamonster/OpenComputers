@@ -1,8 +1,11 @@
 package li.cil.oc.integration.appeng
 
 import appeng.api.AEApi
-import li.cil.oc.api
+import cpw.mods.fml.common.registry.GameRegistry
+import li.cil.oc.{Constants, api}
 import li.cil.oc.api.Driver
+import li.cil.oc.common.Tier
+import li.cil.oc.common.init.Items.registerItem
 import li.cil.oc.common.tileentity.Print
 import li.cil.oc.integration.ModProxy
 import li.cil.oc.integration.Mods
@@ -21,6 +24,7 @@ object ModAppEng extends ModProxy {
     Driver.add(DriverImportBus)
     Driver.add(DriverPartInterface)
     Driver.add(DriverBlockInterface)
+    Driver.add(DriverUpgradeAE)
 
     Driver.add(new ConverterCellInventory)
     Driver.add(new ConverterPattern)
@@ -30,5 +34,13 @@ object ModAppEng extends ModProxy {
     Driver.add(DriverImportBus.Provider)
     Driver.add(DriverPartInterface.Provider)
     Driver.add(DriverBlockInterface.Provider)
+
+    AEApi.instance.registries.wireless.registerWirelessHandler(WirelessHandlerUpgradeAE)
+
+    val multi = new li.cil.oc.common.item.Delegator()
+    GameRegistry.registerItem(multi, "item.ae")
+    registerItem(new ItemUpgradeAE(multi, Tier.One), Constants.ItemName.UpgradeAE1)
+    registerItem(new ItemUpgradeAE(multi, Tier.Two), Constants.ItemName.UpgradeAE2)
+    registerItem(new ItemUpgradeAE(multi, Tier.Three), Constants.ItemName.UpgradeAE3)
   }
 }
