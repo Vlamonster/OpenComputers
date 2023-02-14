@@ -3,7 +3,10 @@ package li.cil.oc.integration.appeng
 import appeng.api.AEApi
 import cpw.mods.fml.common.Loader
 import cpw.mods.fml.common.versioning.VersionRange
+import li.cil.oc.common.item.Delegator
+import li.cil.oc.common.item.data.{DroneData, RobotData}
 import li.cil.oc.integration.Mods
+import li.cil.oc.api
 import net.minecraft.item.ItemStack
 
 object AEUtil {
@@ -118,4 +121,28 @@ object AEUtil {
     AEApi.instance.parts != null &&
       AEApi.instance.parts.partInterface != null &&
       AEApi.instance.parts.partInterface.sameAsStack(stack)
+
+  def isRobot(stack: ItemStack): Boolean =
+    api.Items.get(stack) == api.Items.get("robot")
+
+  def isDrone(stack: ItemStack): Boolean =
+    api.Items.get(stack) == api.Items.get("drone")
+
+  def getAEUpgradeComponent(robot: RobotData): ItemStack = {
+    for (component <- robot.components) {
+      Delegator.subItem(component) match {
+        case Some(_: ItemUpgradeAE) => return component
+      }
+    }
+    null
+  }
+
+  def getAEUpgradeComponent(drone: DroneData): ItemStack = {
+    for (component <- drone.components) {
+      Delegator.subItem(component) match {
+        case Some(_: ItemUpgradeAE) => return component
+      }
+    }
+    null
+  }
 }
