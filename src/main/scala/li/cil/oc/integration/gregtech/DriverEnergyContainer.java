@@ -32,10 +32,19 @@ public final class DriverEnergyContainer extends DriverSidedTileEntity {
             return new Object[] {tileEntity.getStoredEU()};
         }
 
-        @Callback(
-                doc = "function():number --  Returns the amount of electricity containable in this Block, in EU units!")
+        @Callback(doc = "function():string --  Returns the amount of electricity contained in this Block, in EU units! (As a string for HUGE amounts.)")
+        public Object[] getStoredEUString(final Context context, final Arguments args) {
+            return new Object[] {Long.toUnsignedString(tileEntity.getStoredEU())};
+        }
+
+        @Callback(doc = "function():number --  Returns the amount of electricity containable in this Block, in EU units!")
         public Object[] getEUCapacity(final Context context, final Arguments args) {
             return new Object[] {tileEntity.getEUCapacity()};
+        }
+
+        @Callback(doc = "function():number --  Returns the amount of electricity containable in this Block, in EU units! (As a string for HUGE amounts.)")
+        public Object[] getEUCapacityString(final Context context, final Arguments args) {
+            return new Object[] {Long.toUnsignedString(tileEntity.getEUCapacity())};
         }
 
         @Callback(doc = "function():number --  Returns the amount of Steam containable in this Block, in EU units!")
