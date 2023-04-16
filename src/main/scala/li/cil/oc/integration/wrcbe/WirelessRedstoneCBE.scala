@@ -4,6 +4,7 @@ import codechicken.wirelessredstone.core.RedstoneEther
 import li.cil.oc.integration.util.WirelessRedstone.WirelessRedstoneSystem
 import li.cil.oc.server.component.RedstoneWireless
 
+import scala.collection.JavaConversions.asScalaBuffer
 import scala.language.reflectiveCalls
 
 object WirelessRedstoneCBE extends WirelessRedstoneSystem {
@@ -40,4 +41,12 @@ object WirelessRedstoneCBE extends WirelessRedstoneSystem {
   }
 
   def getInput(rs: RedstoneWireless) = rs.wirelessInput
+
+  def resetRedstone(rs: RedstoneWireless): Unit = {
+    val ff = RedstoneEther.server.getTransmittingDevicesOnFreq(rs.wirelessFrequency).filter(f => {
+      (f.getPosition() == rs.getPosition()) && (f.getDimension() == rs.getDimension)
+    }).foreach {
+      RedstoneEther.server.removeTransmittingDevice(_)
+    }
+  }
 }

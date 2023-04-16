@@ -35,6 +35,11 @@ object WirelessRedstone {
 
   def getInput(rs: RedstoneWireless) = systems.exists(_.getInput(rs))
 
+  def resetRedstone(rs: RedstoneWireless): Unit =
+    systems.foreach(system => try system.resetRedstone(rs) catch {
+      case _: Throwable => // Ignore
+    })
+
   trait WirelessRedstoneSystem {
     def addReceiver(rs: RedstoneWireless)
 
@@ -45,6 +50,8 @@ object WirelessRedstone {
     def removeTransmitter(rs: RedstoneWireless)
 
     def getInput(rs: RedstoneWireless): Boolean
+
+    def resetRedstone(rs: RedstoneWireless)
   }
 
 }
