@@ -49,4 +49,6 @@ object WirelessRedstoneSVE extends WirelessRedstoneSystem {
   }
 
   def getInput(rs: RedstoneWireless) = ether.fold(false)(_.getFreqState(rs.redstone.world, rs.wirelessFrequency.toString))
+
+  def resetRedstone(rs: RedstoneWireless) = {}
 }

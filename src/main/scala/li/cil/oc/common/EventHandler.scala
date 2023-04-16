@@ -138,6 +138,7 @@ object EventHandler {
   def scheduleWirelessRedstone(rs: server.component.RedstoneWireless) {
     if (SideTracker.isServer) pendingServer.synchronized {
       pendingServer += (() => if (rs.node.network != null) {
+        util.WirelessRedstone.resetRedstone(rs)
         util.WirelessRedstone.addReceiver(rs)
         util.WirelessRedstone.updateOutput(rs)
       })
