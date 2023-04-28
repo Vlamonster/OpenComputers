@@ -35,8 +35,7 @@ object ModAppEng extends ModProxy {
     Driver.add(DriverPartInterface.Provider)
     Driver.add(DriverBlockInterface.Provider)
 
-    AEApi.instance.registries.wireless.registerWirelessHandler(WirelessHandlerUpgradeAE)
-
+    WirelessHandlerUpgradeAE.register()
     val multi = new li.cil.oc.common.item.Delegator()
     GameRegistry.registerItem(multi, "item.ae")
     registerItem(new ItemUpgradeAE(multi, Tier.One), Constants.ItemName.UpgradeAE1)

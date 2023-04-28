@@ -150,7 +150,7 @@ class UpgradeAE(val host: EnvironmentHost, val tier: Int) extends ManagedEnviron
 
   def getAEKey(stack: ItemStack): Long = {
     try {
-      return WirelessHandlerUpgradeAE.getEncryptionKey(stack).toLong
+      return WirelessHandlerUpgradeAE.instance.getEncryptionKey(stack).toLong
     } catch {
       case _: Throwable =>
     }
