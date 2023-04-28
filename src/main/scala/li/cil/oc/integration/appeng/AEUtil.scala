@@ -132,6 +132,7 @@ object AEUtil {
     for (component <- robot.components) {
       Delegator.subItem(component) match {
         case Some(_: ItemUpgradeAE) => return component
+        case _ =>
       }
     }
     null
@@ -141,6 +142,7 @@ object AEUtil {
     for (component <- drone.components) {
       Delegator.subItem(component) match {
         case Some(_: ItemUpgradeAE) => return component
+        case _ =>
       }
     }
     null
