@@ -1,14 +1,15 @@
 package li.cil.oc.integration.appeng
 
+import appeng.api.AEApi
 import appeng.api.features.IWirelessTermHandler
 import appeng.api.util.IConfigManager
-import li.cil.oc.{Constants, api}
 import li.cil.oc.common.item.data.{DroneData, RobotData}
+import li.cil.oc.{Constants, api}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 
-object WirelessHandlerUpgradeAE extends IWirelessTermHandler {
+class WirelessHandlerUpgradeAE extends IWirelessTermHandler {
 
   override def canHandle(itemStack: ItemStack): Boolean = {
     if (itemStack == null) return false
@@ -71,4 +72,11 @@ object WirelessHandlerUpgradeAE extends IWirelessTermHandler {
     if (component == null) "" else getEncryptionKey(component)
   }
 
+}
+object WirelessHandlerUpgradeAE
+{
+  lazy val instance = new WirelessHandlerUpgradeAE
+  def register() = {
+    AEApi.instance.registries.wireless.registerWirelessHandler(instance)
+  }
 }

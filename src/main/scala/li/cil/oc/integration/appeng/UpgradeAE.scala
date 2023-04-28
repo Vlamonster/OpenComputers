@@ -54,6 +54,7 @@ class UpgradeAE(val host: EnvironmentHost, val tier: Int) extends ManagedEnviron
         for (i <- drone.internalComponents)
           Delegator.subItem(i) match {
             case Some(_: ItemUpgradeAE) => return i
+            case _ =>
           }
         null
       case _ => null
@@ -149,7 +150,7 @@ class UpgradeAE(val host: EnvironmentHost, val tier: Int) extends ManagedEnviron
 
   def getAEKey(stack: ItemStack): Long = {
     try {
-      return WirelessHandlerUpgradeAE.getEncryptionKey(stack).toLong
+      return WirelessHandlerUpgradeAE.instance.getEncryptionKey(stack).toLong
     } catch {
       case _: Throwable =>
     }
