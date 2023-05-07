@@ -2,8 +2,8 @@
 
 dependencies {
     shadowImplementation name: 'OC-LuaJ', version: '20220907.1', ext: 'jar'
-    shadowImplementation name: 'OC-JNLua', version: '20220928.0', ext: 'jar'
-    shadowImplementation name: 'OC-JNLua-Natives', version: '20220928.0', ext: 'jar'
+    shadowImplementation name: 'OC-JNLua', version: '20220928.1', ext: 'jar'
+    shadowImplementation name: 'OC-JNLua-Natives', version: '20220928.1', ext: 'jar'
 
     compile("com.google.code.findbugs:jsr305:3.0.2")
 

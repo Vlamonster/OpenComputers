@@ -51,7 +51,8 @@ class Settings(val config: Config) {
       (-1.0, -1.0)
   }
   val enableNanomachinePfx = config.getBoolean("client.enableNanomachinePfx")
-  val transposerFluidTransferRate = try { config.getInt("misc.transposerFluidTransferRate") } catch { case _ : Throwable => 16000 }
+  val transposerFluidTransferRate = config.getInt("misc.transposerFluidTransferRate")
+
   // ----------------------------------------------------------------------- //
   // computer
   val threads = config.getInt("computer.threads") max 1
@@ -298,6 +299,8 @@ class Settings(val config: Config) {
   // internet
   val httpEnabled = config.getBoolean("internet.enableHttp")
   val httpHeadersEnabled = config.getBoolean("internet.enableHttpHeaders")
+  val httpMethodsEnabled = config.getStringList("internet.enableHttpMethods")
+  val httpRedirectsEnabled = config.getInt("internet.enableHttpRedirects") max -1
   val tcpEnabled = config.getBoolean("internet.enableTcp")
   val httpHostBlacklist = Array(config.getStringList("internet.blacklist").map(new Settings.AddressValidator(_)): _*)
   val httpHostWhitelist = Array(config.getStringList("internet.whitelist").map(new Settings.AddressValidator(_)): _*)
