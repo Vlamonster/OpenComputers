@@ -1,7 +1,8 @@
 package li.cil.oc.server
 
-import li.cil.oc.api
-import li.cil.oc.api.event.{NetworkActivityEvent, FileSystemAccessEvent}
+import com.google.common.cache.{Cache, CacheBuilder}
+import li.cil.oc.{Settings, api}
+import li.cil.oc.api.event.{FileSystemAccessEvent, NetworkActivityEvent}
 import li.cil.oc.api.network.EnvironmentHost
 import li.cil.oc.api.network.Node
 import li.cil.oc.common._
@@ -20,6 +21,7 @@ import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
 
+import java.util.concurrent.{ConcurrentHashMap, TimeUnit}
 import scala.collection.mutable
 
 object PacketSender {
@@ -125,19 +127,24 @@ object PacketSender {
   }
 
   // Avoid spamming the network with disk activity notices.
-  val fileSystemAccessTimeouts = mutable.WeakHashMap.empty[Node, mutable.Map[String, Long]]
+  private val fileSystemAccessTimeouts = mutable.WeakHashMap.empty[Node, Cache[String, java.lang.Long]]
 
-  def sendFileSystemActivity(node: Node, host: EnvironmentHost, name: String) = fileSystemAccessTimeouts.synchronized {
-    fileSystemAccessTimeouts.get(node) match {
-      case Some(hostTimeouts) if hostTimeouts.getOrElse(name, 0L) > System.currentTimeMillis() => // Cooldown.
-      case _ =>
+  def sendFileSystemActivity(node: Node, host: EnvironmentHost, name: String) = {
+    val diskActivityPacketDelay = Settings.get.diskActivitySoundDelay
+
+    if (diskActivityPacketDelay >= 0) {
+      val hostTimeouts = fileSystemAccessTimeouts.synchronized {
+        fileSystemAccessTimeouts.getOrElseUpdate(node, CacheBuilder.newBuilder().concurrencyLevel(Settings.get.threads).maximumSize(250).expireAfterWrite(diskActivityPacketDelay, TimeUnit.MILLISECONDS).build[String, java.lang.Long]())
+      }
+      val lastHostTimeout = hostTimeouts.getIfPresent(name)
+      if (lastHostTimeout == null || lastHostTimeout <= System.currentTimeMillis()) {
         val event = host match {
           case t: net.minecraft.tileentity.TileEntity => new FileSystemAccessEvent.Server(name, t, node)
           case _ => new FileSystemAccessEvent.Server(name, host.world, host.xPosition, host.yPosition, host.zPosition, node)
         }
         MinecraftForge.EVENT_BUS.post(event)
         if (!event.isCanceled) {
-          fileSystemAccessTimeouts.getOrElseUpdate(node, mutable.Map.empty) += name -> (System.currentTimeMillis() + 500)
+          hostTimeouts.put(name, System.currentTimeMillis() + diskActivityPacketDelay)
 
           val pb = new SimplePacketBuilder(PacketType.FileSystemActivity)
 
@@ -155,10 +162,11 @@ object PacketSender {
               pb.writeDouble(event.getZ)
           }
 
-          pb.sendToPlayersNearHost(host, Option(64))
+          pb.sendToPlayersNearHost(host, Option(Settings.get.maxNetworkClientSoundPacketDistance))
         }
+      }
     }
-  }
+}
 
   def sendNetworkActivity(node: Node, host: EnvironmentHost) = {
 
@@ -184,7 +192,7 @@ object PacketSender {
           pb.writeDouble(event.getZ)
       }
 
-      pb.sendToPlayersNearHost(host, Option(64))
+      pb.sendToPlayersNearHost(host, Option(Settings.get.maxNetworkClientEffectPacketDistance))
     }
   }
 
@@ -390,7 +398,7 @@ object PacketSender {
     pb.writeUTF(name)
     pb.writeByte(count.toByte)
 
-    pb.sendToNearbyPlayers(position.world.get, position.x, position.y, position.z, Some(32.0))
+    pb.sendToNearbyPlayers(position.world.get, position.x, position.y, position.z, Some(Settings.get.maxNetworkClientEffectPacketDistance / 2.0D))
   }
 
   def sendPetVisibility(name: Option[String] = None, player: Option[EntityPlayerMP] = None) {
@@ -519,7 +527,7 @@ object PacketSender {
     pb.writeTileEntity(t.proxy)
     pb.writeInt(t.animationTicksTotal)
 
-    pb.sendToPlayersNearTileEntity(t, Option(64))
+    pb.sendToPlayersNearTileEntity(t, Option(Settings.get.maxNetworkClientEffectPacketDistance))
   }
 
   def sendRobotAnimateTurn(t: tileentity.Robot) {
@@ -529,7 +537,7 @@ object PacketSender {
     pb.writeByte(t.turnAxis)
     pb.writeInt(t.animationTicksTotal)
 
-    pb.sendToPlayersNearTileEntity(t, Option(64))
+    pb.sendToPlayersNearTileEntity(t, Option(Settings.get.maxNetworkClientEffectPacketDistance))
   }
 
   def sendRobotInventory(t: tileentity.Robot, slot: Int, stack: ItemStack) {
@@ -548,7 +556,7 @@ object PacketSender {
     pb.writeTileEntity(t.proxy)
     pb.writeInt(t.info.lightColor)
 
-    pb.sendToPlayersNearTileEntity(t, Option(64))
+    pb.sendToPlayersNearTileEntity(t)
   }
 
   def sendRobotNameChange(t: tileentity.Robot) {
@@ -571,7 +579,7 @@ object PacketSender {
     pb.writeTileEntity(t.proxy)
     pb.writeInt(t.selectedSlot)
 
-    pb.sendToPlayersNearTileEntity(t, Option(16))
+    pb.sendToPlayersNearTileEntity(t, Option(Settings.get.maxNetworkClientEffectPacketDistance / 4.0D))
   }
 
   def sendRotatableState(t: Rotatable) {
@@ -589,7 +597,7 @@ object PacketSender {
 
     pb.writeTileEntity(t)
 
-    pb.sendToPlayersNearTileEntity(t, Option(64))
+    pb.sendToPlayersNearTileEntity(t, Option(Settings.get.maxNetworkClientEffectPacketDistance))
   }
 
   def appendTextBufferColorChange(pb: PacketBuilder, foreground: PackedColor.Color, background: PackedColor.Color) {
@@ -775,7 +783,7 @@ object PacketSender {
     pb.writeShort(frequency.toShort)
     pb.writeShort(duration.toShort)
 
-    pb.sendToNearbyPlayers(world, x, y, z, Option(32))
+    pb.sendToNearbyPlayers(world, x, y, z, Option(Settings.get.maxNetworkClientSoundPacketDistance))
   }
 
   def sendSound(world: World, x: Double, y: Double, z: Double, pattern: String) {
@@ -788,7 +796,7 @@ object PacketSender {
     pb.writeInt(blockPos.z)
     pb.writeUTF(pattern)
 
-    pb.sendToNearbyPlayers(world, x, y, z, Option(32))
+    pb.sendToNearbyPlayers(world, x, y, z, Option(Settings.get.maxNetworkClientSoundPacketDistance))
   }
 
   def sendTransposerActivity(t: tileentity.Transposer) {
@@ -796,7 +804,7 @@ object PacketSender {
 
     pb.writeTileEntity(t)
 
-    pb.sendToPlayersNearTileEntity(t, Option(32))
+    pb.sendToPlayersNearTileEntity(t, Option(Settings.get.maxNetworkClientEffectPacketDistance / 2.0D))
   }
 
   def sendWaypointLabel(t: Waypoint): Unit = {
