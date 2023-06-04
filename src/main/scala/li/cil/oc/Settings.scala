@@ -299,8 +299,6 @@ class Settings(val config: Config) {
   // internet
   val httpEnabled = config.getBoolean("internet.enableHttp")
   val httpHeadersEnabled = config.getBoolean("internet.enableHttpHeaders")
-  val httpMethodsEnabled = config.getStringList("internet.enableHttpMethods")
-  val httpRedirectsEnabled = config.getInt("internet.enableHttpRedirects") max -1
   val tcpEnabled = config.getBoolean("internet.enableTcp")
   val httpHostBlacklist = Array(config.getStringList("internet.blacklist").map(new Settings.AddressValidator(_)): _*)
   val httpHostWhitelist = Array(config.getStringList("internet.whitelist").map(new Settings.AddressValidator(_)): _*)
@@ -481,6 +479,12 @@ class Settings(val config: Config) {
   }
 
   val bitbltCost: Double = if (config.hasPath("gpu.bitbltCost")) config.getDouble("gpu.bitbltCost") else 0.5
+
+  // >= 1.8.2
+  val diskActivitySoundDelay: Int = config.getInt("misc.diskActivitySoundDelay") max -1
+  val maxNetworkClientPacketDistance: Double = config.getDouble("misc.maxNetworkClientPacketDistance") max 0
+  val maxNetworkClientEffectPacketDistance: Double = config.getDouble("misc.maxNetworkClientEffectPacketDistance") max 0
+  val maxNetworkClientSoundPacketDistance: Double = config.getDouble("misc.maxNetworkClientSoundPacketDistance") max 0
 }
 
 object Settings {
