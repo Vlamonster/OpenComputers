@@ -55,7 +55,7 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:ExtraCells2:2.5.33:dev") {
         transitive = false
     }
-    compile("com.github.GTNewHorizons:EnderCore:0.2.13:dev")
+    compile("com.github.GTNewHorizons:EnderCore:0.2.14:dev")
     compile("com.github.GTNewHorizons:EnderIO:2.4.11:dev") {
         transitive = false
     }
