@@ -240,7 +240,10 @@ object ModOpenComputers extends ModProxy {
       Constants.ItemName.LeashUpgrade,
       Constants.ItemName.TradingUpgrade,
       Constants.ItemName.BeekeeperUpgrade,
-      Constants.ItemName.RITEGUpgrade
+      Constants.ItemName.RITEGUpgrade,
+      Constants.ItemName.UpgradeAE1,
+      Constants.ItemName.UpgradeAE2,
+      Constants.ItemName.UpgradeAE3
     )
     blacklistHost(classOf[internal.Drone],
       Constants.BlockName.Keyboard,
@@ -289,7 +292,11 @@ object ModOpenComputers extends ModProxy {
       Constants.ItemName.TractorBeamUpgrade,
       Constants.ItemName.LeashUpgrade,
       Constants.ItemName.TradingUpgrade,
-      Constants.ItemName.BeekeeperUpgrade)
+      Constants.ItemName.BeekeeperUpgrade,
+      Constants.ItemName.UpgradeAE1,
+      Constants.ItemName.UpgradeAE2,
+      Constants.ItemName.UpgradeAE3
+    )
     blacklistHost(classOf[internal.Robot],
       Constants.BlockName.Transposer,
       Constants.BlockName.CarpetedCapacitor,
@@ -320,7 +327,10 @@ object ModOpenComputers extends ModProxy {
       Constants.ItemName.LeashUpgrade,
       Constants.ItemName.TradingUpgrade,
       Constants.ItemName.BeekeeperUpgrade,
-      Constants.ItemName.ConfiguratorUpgrade
+      Constants.ItemName.ConfiguratorUpgrade,
+      Constants.ItemName.UpgradeAE1,
+      Constants.ItemName.UpgradeAE2,
+      Constants.ItemName.UpgradeAE3
     )
 
     if (!WirelessRedstone.isAvailable) {

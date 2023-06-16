@@ -53,6 +53,7 @@ Keep in mind that some of these may not be available, depending on the recipe se
 * [Tractor Beam Upgrade](tractorBeamUpgrade.md)
 * [Trading Upgrade](tradingUpgrade.md)
 * [Upgrade Container](upgradeContainer1.md)
+* [ME Upgrade](me_upgrade1.md )
 
 ### Rack Mountables
 * [Disk Drive](diskDriveMountable.md)

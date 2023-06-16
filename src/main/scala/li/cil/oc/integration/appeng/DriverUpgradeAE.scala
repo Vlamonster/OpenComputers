@@ -2,6 +2,7 @@ package li.cil.oc.integration.appeng
 
 import li.cil.oc.api
 import li.cil.oc.Constants
+import li.cil.oc.api.driver.EnvironmentProvider
 import li.cil.oc.api.driver.item.HostAware
 import li.cil.oc.api.network.EnvironmentHost
 import li.cil.oc.common.Slot
@@ -27,4 +28,11 @@ object DriverUpgradeAE extends Item with HostAware {
       case Some(card: ItemUpgradeAE) => card.tier
       case _ => Tier.One
     }
+
+  object Provider extends EnvironmentProvider {
+    override def getEnvironment(stack: ItemStack): Class[_] =
+      if (worksWith(stack))
+        classOf[UpgradeAE]
+      else null
+  }
 }
