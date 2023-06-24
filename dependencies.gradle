@@ -55,6 +55,9 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:ExtraCells2:2.5.33:dev") {
         transitive = false
     }
+    compileOnly('com.github.GTNewHorizons:AE2FluidCraft-Rework:1.1.21-gtnh:dev') { 
+        transitive = false 
+    }
     compile("com.github.GTNewHorizons:EnderCore:0.2.14:dev")
     compile("com.github.GTNewHorizons:EnderIO:2.4.11:dev") {
         transitive = false
