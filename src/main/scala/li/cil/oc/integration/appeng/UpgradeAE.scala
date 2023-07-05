@@ -190,9 +190,7 @@ class UpgradeAE(val host: EnvironmentHost, val tier: Int) extends ManagedEnviron
     storage.getItemInventory
   }
 
-  @Callback(doc =
-    "function([number:amount]):number -- Transfer selected items to your ae system."
-  )
+  @Callback(doc = """function([number:amount]):number -- Transfer selected items to your ae system.""")
   def sendItems(context: Context, args: Arguments): Array[AnyRef] = {
     val selected = agent.selectedSlot
     val invRobot = agent.mainInventory
@@ -226,9 +224,7 @@ class UpgradeAE(val host: EnvironmentHost, val tier: Int) extends ManagedEnviron
     }
   }
 
-  @Callback(doc =
-    "function(database:address, entry:number[, number:amount]):number -- Get items from your ae system."
-  )
+  @Callback(doc = """function(database:address, entry:number[, number:amount]):number -- Get items from your ae system.""")
   def requestItems(context: Context, args: Arguments): Array[AnyRef] = {
 
     val address = args.checkString(0)
@@ -284,9 +280,7 @@ class UpgradeAE(val host: EnvironmentHost, val tier: Int) extends ManagedEnviron
     Array(ext.underlying)
   }
 
-  @Callback(doc =
-    "function([number:amount]):number -- Transfer selected fluid to your ae system."
-  )
+  @Callback(doc = """function([number:amount]):number -- Transfer selected fluid to your ae system.""")
   def sendFluids(context: Context, args: Arguments): Array[AnyRef] = {
     val selected = agent.selectedTank
     val tanks = agent.tank
@@ -314,9 +308,7 @@ class UpgradeAE(val host: EnvironmentHost, val tier: Int) extends ManagedEnviron
     }
   }
 
-  @Callback(doc =
-    "function(database:address, entry:number[, number:amount]):number -- Get fluid from your ae system."
-  )
+  @Callback(doc = """function(database:address, entry:number[, number:amount]):number -- Get fluid from your ae system.""")
   def requestFluids(context: Context, args: Arguments): Array[AnyRef] = {
     val address = args.checkString(0)
     val entry = args.checkInteger(1)
@@ -352,9 +344,7 @@ class UpgradeAE(val host: EnvironmentHost, val tier: Int) extends ManagedEnviron
   }
 
 
-  @Callback(doc =
-    "function():boolean -- Return true if the card is linked to your ae network."
-  )
+  @Callback(doc = """function():boolean -- Return true if the card is linked to your ae network.""")
   def isLinked(context: Context, args: Arguments): Array[AnyRef] = {
     val isLinked = getGrid != null
     Array(boolean2Boolean(isLinked))
