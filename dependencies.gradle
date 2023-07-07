@@ -123,4 +123,8 @@ dependencies {
     testCompile("org.mockito:mockito-all:1.10.19")
     testCompile("org.scalactic:scalactic_2.11:2.2.6")
     testCompile("org.scalatest:scalatest_2.11:2.2.6")
+	testCompile "junit:junit:4.13"
+    testCompile "org.mockito:mockito-all:1.10.19"
+    testCompile "org.scalactic:scalactic_2.11:2.2.6"
+    testCompile "org.scalatest:scalatest_2.11:2.2.6"
 }
