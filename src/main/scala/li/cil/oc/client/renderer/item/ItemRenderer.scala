@@ -193,7 +193,7 @@ object ItemRenderer extends IItemRenderer {
     GL11.glDisable(GL11.GL_CULL_FACE)
 
     // Front.
-    GL11.glNormal3f(0, 0, 1)
+    // GL11.glNormal3f(0, 0, 1)
     GL11.glTexCoord2f(texture.getInterpolatedU(bounds.minX * 16), texture.getInterpolatedV(16 - bounds.minY * 16))
     GL11.glVertex3d(bounds.minX, bounds.minY, bounds.maxZ)
     GL11.glTexCoord2f(texture.getInterpolatedU(bounds.maxX * 16), texture.getInterpolatedV(16 - bounds.minY * 16))
@@ -204,7 +204,7 @@ object ItemRenderer extends IItemRenderer {
     GL11.glVertex3d(bounds.minX, bounds.maxY, bounds.maxZ)
 
     // Back.
-    GL11.glNormal3f(0, 0, -1)
+    // GL11.glNormal3f(0, 0, -1)
     GL11.glTexCoord2f(texture.getInterpolatedU(bounds.maxX * 16), texture.getInterpolatedV(16 - bounds.minY * 16))
     GL11.glVertex3d(bounds.maxX, bounds.minY, bounds.minZ)
     GL11.glTexCoord2f(texture.getInterpolatedU(bounds.minX * 16), texture.getInterpolatedV(16 - bounds.minY * 16))
@@ -215,7 +215,7 @@ object ItemRenderer extends IItemRenderer {
     GL11.glVertex3d(bounds.maxX, bounds.maxY, bounds.minZ)
 
     // Top.
-    GL11.glNormal3f(0, 1, 0)
+    // GL11.glNormal3f(0, 1, 0)
     GL11.glTexCoord2f(texture.getInterpolatedU(bounds.maxX * 16), texture.getInterpolatedV(bounds.maxZ * 16))
     GL11.glVertex3d(bounds.maxX, bounds.maxY, bounds.maxZ)
     GL11.glTexCoord2f(texture.getInterpolatedU(bounds.maxX * 16), texture.getInterpolatedV(bounds.minZ * 16))
@@ -226,7 +226,7 @@ object ItemRenderer extends IItemRenderer {
     GL11.glVertex3d(bounds.minX, bounds.maxY, bounds.maxZ)
 
     // Bottom.
-    GL11.glNormal3f(0, -1, 0)
+    // GL11.glNormal3f(0, -1, 0)
     GL11.glTexCoord2f(texture.getInterpolatedU(bounds.minX * 16), texture.getInterpolatedV(bounds.maxZ * 16))
     GL11.glVertex3d(bounds.minX, bounds.minY, bounds.maxZ)
     GL11.glTexCoord2f(texture.getInterpolatedU(bounds.minX * 16), texture.getInterpolatedV(bounds.minZ * 16))
@@ -237,7 +237,7 @@ object ItemRenderer extends IItemRenderer {
     GL11.glVertex3d(bounds.maxX, bounds.minY, bounds.maxZ)
 
     // Left.
-    GL11.glNormal3f(1, 0, 0)
+    // GL11.glNormal3f(1, 0, 0)
     GL11.glTexCoord2f(texture.getInterpolatedU(bounds.maxZ * 16), texture.getInterpolatedV(16 - bounds.maxY * 16))
     GL11.glVertex3d(bounds.maxX, bounds.maxY, bounds.maxZ)
     GL11.glTexCoord2f(texture.getInterpolatedU(bounds.maxZ * 16), texture.getInterpolatedV(16 - bounds.minY * 16))
@@ -248,7 +248,7 @@ object ItemRenderer extends IItemRenderer {
     GL11.glVertex3d(bounds.maxX, bounds.maxY, bounds.minZ)
 
     // Right.
-    GL11.glNormal3f(-1, 0, 0)
+    // GL11.glNormal3f(-1, 0, 0)
     GL11.glTexCoord2f(texture.getInterpolatedU(bounds.maxZ * 16), texture.getInterpolatedV(16 - bounds.minY * 16))
     GL11.glVertex3d(bounds.minX, bounds.minY, bounds.maxZ)
     GL11.glTexCoord2f(texture.getInterpolatedU(bounds.maxZ * 16), texture.getInterpolatedV(16 - bounds.maxY * 16))

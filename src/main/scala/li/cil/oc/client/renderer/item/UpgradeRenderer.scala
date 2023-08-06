@@ -68,7 +68,7 @@ object UpgradeRenderer {
     GL11.glBegin(GL11.GL_QUADS)
 
     // Front.
-    GL11.glNormal3f(0, 0, 1)
+    // GL11.glNormal3f(0, 0, 1)
     GL11.glTexCoord2f(frontOffset, 0.5f)
     GL11.glVertex3d(bounds.minX, bounds.minY, bounds.maxZ)
     GL11.glTexCoord2f(frontOffset + 0.5f, 0.5f)
@@ -79,7 +79,7 @@ object UpgradeRenderer {
     GL11.glVertex3d(bounds.minX, bounds.maxY, bounds.maxZ)
 
     // Top.
-    GL11.glNormal3f(0, 1, 0)
+    // GL11.glNormal3f(0, 1, 0)
     GL11.glTexCoord2f(1, 0.5f)
     GL11.glVertex3d(bounds.maxX, bounds.maxY, bounds.maxZ)
     GL11.glTexCoord2f(1, 1)
@@ -90,7 +90,7 @@ object UpgradeRenderer {
     GL11.glVertex3d(bounds.minX, bounds.maxY, bounds.maxZ)
 
     // Bottom.
-    GL11.glNormal3f(0, -1, 0)
+    // GL11.glNormal3f(0, -1, 0)
     GL11.glTexCoord2f(0.5f, 0.5f)
     GL11.glVertex3d(bounds.minX, bounds.minY, bounds.maxZ)
     GL11.glTexCoord2f(0.5f, 1)
@@ -101,7 +101,7 @@ object UpgradeRenderer {
     GL11.glVertex3d(bounds.maxX, bounds.minY, bounds.maxZ)
 
     // Left.
-    GL11.glNormal3f(1, 0, 0)
+    // GL11.glNormal3f(1, 0, 0)
     GL11.glTexCoord2f(0, 0.5f)
     GL11.glVertex3d(bounds.maxX, bounds.maxY, bounds.maxZ)
     GL11.glTexCoord2f(0, 1)
@@ -112,7 +112,7 @@ object UpgradeRenderer {
     GL11.glVertex3d(bounds.maxX, bounds.maxY, bounds.minZ)
 
     // Right.
-    GL11.glNormal3f(-1, 0, 0)
+    // GL11.glNormal3f(-1, 0, 0)
     GL11.glTexCoord2f(0, 1)
     GL11.glVertex3d(bounds.minX, bounds.minY, bounds.maxZ)
     GL11.glTexCoord2f(0, 0.5f)
