@@ -37,10 +37,7 @@ public final class ConverterPattern implements Converter {
 
                 Map[] results = new Map[outTag.tagCount()];
                 for (int i = 0; i < outTag.tagCount(); i++) {
-<<<<<<< HEAD
                     results[i] = new HashMap<>();
-=======
->>>>>>> 9e027d76a877e31a948855ace498ea26cdd3a157
                     final NBTTagCompound tag = outTag.getCompoundTagAt(i);
                     final ItemStack outputItem = Platform.loadItemStackFromNBT(tag);
                     if (outputItem != null) {
