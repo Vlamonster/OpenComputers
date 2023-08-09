@@ -162,6 +162,7 @@ object DriverBlockInterface extends DriverSidedTileEntity {
         val nbt = new NBTTagCompound()
         stack.writeToNBT(nbt)
         nbt.setInteger("Count", stack.stackSize)
+        nbt.setLong("Cnt", stack.stackSize)
         inTag.func_150304_a(index, nbt)
       }
       else
