@@ -56,7 +56,7 @@ public final class ConverterPattern implements Converter {
                     output.put("isCraftable", p.isCraftable());
             
             } catch (final Throwable ignored) {
-                System.out.println(ignored);
+                
             }
         }
     }
