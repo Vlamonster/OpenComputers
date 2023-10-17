@@ -2,6 +2,8 @@ package li.cil.oc.integration.ic2;
 
 import ic2.api.reactor.IReactor;
 import ic2.api.reactor.IReactorChamber;
+import ic2.core.block.TileEntityBlock;
+import ic2.core.block.reactor.tileentity.TileEntityNuclearReactorElectric;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -39,6 +41,15 @@ public final class DriverReactorChamber extends DriverSidedTileEntity {
             return 0;
         }
 
+        @Callback(doc = "function(active:boolean): boolean -- activate or deactivate the reactor")
+        public Object[] setActive(final Context context, final Arguments args) {
+            TileEntityNuclearReactorElectric reactor = (TileEntityNuclearReactorElectric) tileEntity.getReactor();
+            if(reactor != null) {
+                reactor.setRedstoneSignal(args.optBoolean(0, false));
+                return new Object[]{reactor.receiveredstone()};
+            }
+            return new Object[]{false};
+        }
         @Callback(doc = "function():number -- Get the reactor's heat.")
         public Object[] getHeat(final Context context, final Arguments args) {
             final IReactor reactor = tileEntity.getReactor();
