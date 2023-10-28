@@ -260,6 +260,9 @@ private class Network private(private val data: mutable.Map[String, Network.Vert
       addedNode.onConnect(addedNode)
       val visibleNodes = nodes.filter(_.reachability == Visibility.Network)
       visibleNodes.foreach(node => connects += ((node, nodes)))
+    } else if(addedNode.network == oldNode.data.network) {
+       //well this causes stack overflow
+       false
     }
     else {
       val otherNetwork = addedNode.network.asInstanceOf[Network.Wrapper].network
