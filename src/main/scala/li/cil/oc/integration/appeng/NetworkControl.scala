@@ -221,17 +221,26 @@ object NetworkControl {
       val status = new CraftingStatus()
       Future {
         try {
-          val job = future.get() // Make 100% sure we wait for this outside the scheduled closure.
-          EventHandler.scheduleServer(() => {
-            val link = craftingGrid.submitJob(job, Craftable.this, cpu, prioritizePower, source)
-            if (link != null) {
-              status.setLink(link)
-              links += link
-            }
-            else {
-              status.fail("missing resources?")
-            }
-          })
+          while (!future.isDone) {
+            Thread.sleep(10)
+          }
+
+          val job = future.get()
+
+          if (future.isCancelled) {
+            status.fail("missing resources")
+          } else {
+            EventHandler.scheduleServer(() => {
+              val link = craftingGrid.submitJob(job, Craftable.this, cpu, prioritizePower, source)
+              if (link != null) {
+                status.setLink(link)
+                links += link
+              }
+              else {
+                status.fail("missing resources?")
+              }
+            })
+          }
         }
         catch {
           case e: Exception =>
@@ -364,6 +373,12 @@ object NetworkControl {
       failed = true
       this.reason = s"request failed ($reason)"
     }
+
+    @Callback(doc = "function():boolean -- Get whether the crafting request is currently computing.")
+    def isComputing(context: Context, args: Arguments): Array[AnyRef] = result(isComputing)
+
+    @Callback(doc = "function():boolean -- Get whether the crafting request has failed.")
+    def hasFailed(context: Context, args: Arguments): Array[AnyRef] = result(failed)
 
     @Callback(doc = "function():boolean -- Get whether the crafting request has been canceled.")
     def isCanceled(context: Context, args: Arguments): Array[AnyRef] = {
