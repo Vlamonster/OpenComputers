@@ -1,5 +1,12 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 tasks.withType(ScalaCompile) {
     scalaCompileOptions.forkOptions.with {
         memoryMaximumSize = '4g'
+    }
+}
+tasks.named("processResources", ProcessResources).configure {
+    filesMatching("application.conf") {
+        filter(ReplaceTokens, tokens: [version: project.version])
     }
 }
