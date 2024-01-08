@@ -22,7 +22,7 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:Railcraft:9.15.3:dev") {
         transitive = false
     }
-    compile("com.github.GTNewHorizons:NotEnoughItems:2.5.1-GTNH:dev") {
+    compile("com.github.GTNewHorizons:NotEnoughItems:2.5.3-GTNH:dev") {
         transitive = false
     }
     compileOnly("com.github.GTNewHorizons:ForgeMultipart:1.4.5:dev") {
