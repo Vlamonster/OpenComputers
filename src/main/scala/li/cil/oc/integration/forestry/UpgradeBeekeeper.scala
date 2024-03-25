@@ -31,6 +31,8 @@ class UpgradeBeekeeper(val host: EnvironmentHost with internal.Agent) extends pr
     DeviceAttribute.Product -> "Breeding bees for you (almost)"
   )
 
+  private final val defaultStackSize = 64
+
   override def getDeviceInfo: util.Map[String, String] = deviceInfo
   override def position: BlockPosition = BlockPosition(host)
   override protected def checkSideForAction(args: Arguments, n: Int): ForgeDirection = args.checkSideAny(n)
@@ -98,7 +100,7 @@ class UpgradeBeekeeper(val host: EnvironmentHost with internal.Agent) extends pr
   def addIndustrialUpgrade(context: Context, args: Arguments): Array[AnyRef] = {
     val facing = checkSideForAction(args, 0)
     val pos = position.offset(facing)
-    var amount = 999
+    var amount = defaultStackSize
     if (args.count() > 1)
       amount = args.checkInteger(1)
     result(UpgradeBeekeeperUtil.addIndustrialUpgrade(pos, host.mainInventory(), host.selectedSlot(), amount))
@@ -108,8 +110,9 @@ class UpgradeBeekeeper(val host: EnvironmentHost with internal.Agent) extends pr
     val facing = checkSideForAction(args, 0)
     val pos = position.offset(facing)
     val slot = args.checkInteger(1)
-    if (slot < 1 || slot > 4)
-      return result(Unit, "Wrong slot index (should be 1-4)")
+    val maxIndex = UpgradeBeekeeperUtil.getMaxIndustrialUpgradeCount
+    if (slot < 1 || slot > maxIndex)
+      return result(Unit, "Wrong slot index (should be 1-" + maxIndex + ")")
     result(UpgradeBeekeeperUtil.getIndustrialUpgrade(pos, slot))
   }
   @Callback(doc = """function(side:number, slot: number[, amount: number]):boolean -- Remove industrial upgrade from the given slot of the industrial apiary at the given side.""")
@@ -117,11 +120,12 @@ class UpgradeBeekeeper(val host: EnvironmentHost with internal.Agent) extends pr
     val facing = checkSideForAction(args, 0)
     val pos = position.offset(facing)
     val slot = args.checkInteger(1)
-    var amount = 999
+    val maxIndex = UpgradeBeekeeperUtil.getMaxIndustrialUpgradeCount
+    var amount = defaultStackSize
     if (args.count() > 2)
       amount = args.checkInteger(2)
-    if (slot < 1 || slot > 4)
-      return result(false, "Wrong slot index (should be 1-4)")
+    if (slot < 1 || slot > maxIndex)
+      return result(false, "Wrong slot index (should be 1-" + maxIndex + ")")
     result(UpgradeBeekeeperUtil.removeIndustrialUpgrade(pos, host.mainInventory(), host.selectedSlot(), slot, amount))
   }
 }

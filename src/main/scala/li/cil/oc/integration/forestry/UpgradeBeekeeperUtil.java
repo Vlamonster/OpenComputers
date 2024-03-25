@@ -1,8 +1,8 @@
 package li.cil.oc.integration.forestry;
 
+import cpw.mods.fml.common.Loader;
 import forestry.api.apiculture.IBeeHousing;
 import gregtech.api.metatileentity.BaseMetaTileEntity;
-import gregtech.api.util.GT_ApiaryUpgrade;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.tileentities.machines.basic.GT_MetaTileEntity_IndustrialApiary;
 import li.cil.oc.util.BlockPosition;
@@ -17,8 +17,7 @@ import net.minecraft.world.World;
  * */
 public final class UpgradeBeekeeperUtil {
 
-    // First upgrade slot index of Industrial Apiaries because it's private for some reason
-    private static final int UPGRADE_INDEX = 7;
+    private static final boolean GT_LOADED = Loader.isModLoaded("gregtech");
     private UpgradeBeekeeperUtil() {}
 
     /** Returns an IBeeHousing TileEntity at position pos. Can be an Industrial Apiary */
@@ -32,6 +31,10 @@ public final class UpgradeBeekeeperUtil {
             return null;
         if (te instanceof IBeeHousing)
             return (IBeeHousing)te;
+
+        if (!GT_LOADED)
+            return null;
+
         // Scala doesn't compile if these checks are of the form (a instanceof B b)
         if (!(te instanceof BaseMetaTileEntity))
             return null;
@@ -43,7 +46,7 @@ public final class UpgradeBeekeeperUtil {
 
     /** Returns a Tile Entity for Industrial Apiaries at position pos, or null if none exist */
     public static GT_MetaTileEntity_IndustrialApiary getGTIApiaryAt(BlockPosition pos) {
-        if (pos.world().isEmpty())
+        if (!GT_LOADED || pos.world().isEmpty())
             return null;
 
         World world = pos.world().get();
@@ -82,72 +85,56 @@ public final class UpgradeBeekeeperUtil {
         return true;
     }
 
+    public static int getMaxIndustrialUpgradeCount() {
+        if (!GT_LOADED)
+            return 0;
+        return GT_MetaTileEntity_IndustrialApiary.getMaxUpgradeCount();
+    }
+
     public static int addIndustrialUpgrade(BlockPosition pos, IInventory hostInv, int slot, int amount) {
         GT_MetaTileEntity_IndustrialApiary iapiary = getGTIApiaryAt(pos);
-        if (iapiary == null)
+        if (iapiary == null || amount <= 0)
             return 0;
 
         ItemStack stackToInstall = hostInv.getStackInSlot(slot);
-        if (stackToInstall == null || !GT_ApiaryUpgrade.isUpgrade(stackToInstall))
+        if (stackToInstall == null)
             return 0;
         amount = Math.min(amount, stackToInstall.stackSize);
 
-        for (int i = UPGRADE_INDEX; i < UPGRADE_INDEX + 4; i++) {
-            // isItemValidForSlot ensures merging existing stacks
-            if (!iapiary.isItemValidForSlot(i, stackToInstall))
-                continue;
+        ItemStack stackToTryPush = stackToInstall.splitStack(amount);
+        iapiary.addUpgrade(stackToTryPush);
+        int itemsPushed = amount - stackToTryPush.stackSize;
+        // Any Upgrades that weren't pushed go back into host inventory
+        stackToInstall.stackSize += stackToTryPush.stackSize;
 
-            int maxStackSize = GT_ApiaryUpgrade.getUpgrade(stackToInstall).getMaxNumber();
-            ItemStack stack = iapiary.getStackInSlot(i);
-            // Push into empty slot
-            if (stack == null) {
-                amount = Math.min(amount, maxStackSize);
-                iapiary.setInventorySlotContents(i, stackToInstall.splitStack(amount));
-                if (stackToInstall.stackSize <= 0)
-                    hostInv.setInventorySlotContents(slot, null);
-                return amount;
-            }
-            // Merge stacks
-            if (!GT_Utility.areStacksEqual(stackToInstall, stack))
-                continue;
-            amount = Math.max(Math.min(amount, maxStackSize - stack.stackSize), 0);
-            if (amount == 0)
-                return 0;
-            stack.stackSize += amount;
-            stackToInstall.stackSize -= amount;
-            if (stackToInstall.stackSize <= 0)
-                hostInv.setInventorySlotContents(slot, null);
-            return amount;
-        }
-        return 0;
+        return itemsPushed;
     }
 
     public static ItemStack getIndustrialUpgrade(BlockPosition pos, int index){
-        if (index < 1 || index > 4)
+        if (index < 1 || index > getMaxIndustrialUpgradeCount())
             return null;
         GT_MetaTileEntity_IndustrialApiary iapiary = getGTIApiaryAt(pos);
         if (iapiary == null)
             return null;
-        return iapiary.getStackInSlot(index - 1 + UPGRADE_INDEX);
+        return iapiary.getUpgrade(index - 1);
     }
 
     public static int removeIndustrialUpgrade(BlockPosition pos, IInventory hostInv, int slot, int index, int amount) {
-        if (index < 1 || index > 4)
+        if (index < 1 || index > getMaxIndustrialUpgradeCount() || amount <= 0)
             return 0;
         GT_MetaTileEntity_IndustrialApiary iapiary = getGTIApiaryAt(pos);
         if (iapiary == null)
             return 0;
 
-        index = index - 1 + UPGRADE_INDEX;
-        ItemStack stack = iapiary.getStackInSlot(index);
+        ItemStack stack = iapiary.getUpgrade(index - 1);
         if (stack == null)
             return 0;
+        stack = stack.copy();
+
         amount = Math.min(amount, stack.stackSize);
         int moved = insertIntoHostInv(hostInv, slot, stack.splitStack(amount));
-        // If less items were moved than planned, move the unmoved items back
-        stack.stackSize += (amount - moved);
-        if (stack.stackSize <= 0)
-            iapiary.setInventorySlotContents(index, null);
+
+        iapiary.removeUpgrade(index - 1, moved);
         return moved;
     }
 
