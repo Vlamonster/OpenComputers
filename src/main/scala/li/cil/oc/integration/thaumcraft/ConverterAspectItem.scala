@@ -1,12 +1,11 @@
 package li.cil.oc.integration.thaumcraft
 
-import java.util
-
 import li.cil.oc.api.driver.Converter
 import net.minecraft.item.ItemStack
 import thaumcraft.api.aspects.{AspectList, IAspectContainer}
 import thaumcraft.common.items.wands.ItemWandCasting
 
+import java.util
 import scala.collection.convert.WrapAsScala._
 
 object ConverterAspectItem extends Converter {
