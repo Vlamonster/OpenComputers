@@ -111,5 +111,16 @@ public final class DriverReactorRedstonePort extends DriverSidedTileEntity {
                 return new Object[] {false};
             }
         }
+
+        @Callback(doc = "function():number -- Get the reactor's emitted heat. Useful for fluid reactors.")
+        public Object[] getEmitHeat(final Context context, final Arguments args) {
+            final IReactor reactor = getReactor();
+            if(reactor instanceof TileEntityNuclearReactorElectric) {
+                TileEntityNuclearReactorElectric fluidReactor = (TileEntityNuclearReactorElectric) reactor;
+                return new Object[] {fluidReactor.EmitHeat};
+            } else {
+                return new Object[] {};
+            }
+        }
     }
 }
