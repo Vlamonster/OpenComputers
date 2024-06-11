@@ -119,7 +119,7 @@ public final class DriverReactorRedstonePort extends DriverSidedTileEntity {
                 TileEntityNuclearReactorElectric fluidReactor = (TileEntityNuclearReactorElectric) reactor;
                 return new Object[] {fluidReactor.EmitHeat};
             } else {
-                return new Object[] {};
+                return new Object[] {0};
             }
         }
     }
