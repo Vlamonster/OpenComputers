@@ -14,9 +14,10 @@ public class ConverterReactorHeatStorage implements Converter {
             final Item item = stack.getItem();
             if (item instanceof IReactorComponent) {
                 final IReactorComponent reactorComponent = (IReactorComponent) item;
-                if (reactorComponent.canStoreHeat(null, stack, 0, 0)) {
+                int maxHeat = reactorComponent.getMaxHeat(null, stack, 0, 0);
+                if (maxHeat > 0) {
                 	output.put("heat", reactorComponent.getCurrentHeat(null, stack, 0, 0));
-                	output.put("maxHeat", reactorComponent.getMaxHeat(null, stack, 0, 0));
+                	output.put("maxHeat", maxHeat);
                 }
             }
         }
