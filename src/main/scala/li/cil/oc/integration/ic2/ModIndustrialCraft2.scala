@@ -37,6 +37,5 @@ object ModIndustrialCraft2 extends ModProxy {
     Driver.add(new ConverterElectricItem)
     Driver.add(new ConverterBaseSeed)
     Driver.add(new DriverCrop)
-    Driver.add(new ConverterReactorHeatStorage)
   }
 }
