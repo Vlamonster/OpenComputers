@@ -2,6 +2,7 @@ package li.cil.oc.integration.ic2;
 
 import ic2.api.reactor.IReactor;
 import ic2.api.reactor.IReactorChamber;
+import ic2.api.reactor.IReactorComponent;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.block.reactor.tileentity.TileEntityNuclearReactorElectric;
 import li.cil.oc.api.driver.NamedBlock;
@@ -11,8 +12,12 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import li.cil.oc.integration.ManagedTileEntityEnvironment;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.HashMap;
 
 public final class DriverReactorChamber extends DriverSidedTileEntity {
     @Override
@@ -94,6 +99,41 @@ public final class DriverReactorChamber extends DriverSidedTileEntity {
             } else {
                 return new Object[] {false};
             }
+        }
+
+        @Callback(doc = "function(x:int,y:int):table -- Get information about the item stored in the given reactor slot.")
+        public Object[] getSlotInfo(final Context context, final Arguments args) {
+            final IReactor reactor = tileEntity.getReactor();
+
+            if (reactor == null) {
+                return null;
+            }
+
+            final int x = args.optInteger(0, -1);
+            final int y = args.optInteger(1, -1);
+
+            final ItemStack stack = reactor.getItemAt(x, y);
+
+            if (stack == null) {
+                return null;
+            }
+
+            final Item item = stack.getItem();
+
+            final HashMap<String, Object> outputMap = new HashMap<String, Object> ();
+
+            outputMap.put("item", stack);
+
+            if (item instanceof IReactorComponent) {
+                final IReactorComponent component = (IReactorComponent) item;
+                outputMap.put("canStoreHeat", component.canStoreHeat(reactor, stack, x, y));
+                outputMap.put("heat", component.getCurrentHeat(reactor, stack, x, y));
+                outputMap.put("maxHeat", component.getMaxHeat(reactor, stack, x, y));
+            }
+
+            return new Object[] {
+                outputMap
+            };
         }
     }
 }
