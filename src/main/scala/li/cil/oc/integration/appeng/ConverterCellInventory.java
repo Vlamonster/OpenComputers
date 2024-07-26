@@ -7,6 +7,8 @@ import appeng.api.storage.ICellInventoryHandler;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import java.util.Map;
+
+import appeng.util.IterationCounter;
 import li.cil.oc.api.driver.Converter;
 import net.minecraft.item.ItemStack;
 
@@ -23,7 +25,7 @@ public final class ConverterCellInventory implements Converter {
             output.put("getTotalItemTypes", cell.getTotalItemTypes());
             output.put(
                     "getAvailableItems",
-                    cell.getAvailableItems(AEApi.instance().storage().createItemList()));
+                    cell.getAvailableItems(AEApi.instance().storage().createItemList(), IterationCounter.fetchNewId()));
 
             output.put("totalBytes", cell.getTotalBytes());
             output.put("freeBytes", cell.getFreeBytes());
