@@ -7,12 +7,12 @@ dependencies {
 
     compile("com.google.code.findbugs:jsr305:3.0.2")
 
-    compileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-423-GTNH:dev") {transitive = false }
+    compileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-426-GTNH:dev") {transitive = false }
     compileOnly("com.github.GTNewHorizons:EnderStorage:1.6.0:dev") {transitive = false }
-    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.48.128:dev") {transitive = false }
+    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.49.03:dev") {transitive = false }
     compile("com.github.GTNewHorizons:ForestryMC:4.9.7:dev") {transitive = false }
     compileOnly("com.github.GTNewHorizons:Railcraft:9.15.11:dev") {transitive = false }
-    compile("com.github.GTNewHorizons:NotEnoughItems:2.6.19-GTNH:dev") {transitive = false }
+    compile("com.github.GTNewHorizons:NotEnoughItems:2.6.25-GTNH:dev") {transitive = false }
     compileOnly("com.github.GTNewHorizons:ForgeMultipart:1.5.0:dev") {transitive = false }
     compile("com.github.GTNewHorizons:CodeChickenLib:1.3.0:dev") {transitive = false }
     compile("com.github.GTNewHorizons:CodeChickenCore:1.3.6:dev") {transitive = false }
@@ -29,7 +29,7 @@ dependencies {
         transitive = false
     }
     compileOnly("com.github.GTNewHorizons:Avaritiaddons:1.7.1-GTNH:dev") {transitive = false }
-    compileOnly("com.github.GTNewHorizons:gendustry:1.8.0-GTNH:dev") {transitive = false }
+    compileOnly("com.github.GTNewHorizons:gendustry:1.8.2-GTNH:dev") {transitive = false }
     compileOnly("com.github.GTNewHorizons:WirelessRedstone-CBE:1.6.0:dev") {transitive = false }
     compileOnly("com.github.GTNewHorizons:BuildCraft:7.1.39:dev") {transitive = false }
     compileOnly("appeng:RotaryCraft:V5c:api") {transitive = false }
@@ -64,5 +64,5 @@ dependencies {
     testCompile "org.scalatest:scalatest_2.11:2.2.6"
 
     compileOnly("com.github.GTNewHorizons:ModularUI:1.2.0:dev") {transitive = false}
-    compileOnly("com.github.GTNewHorizons:StructureLib:1.3.1:dev") {transitive = false}
+    compileOnly("com.github.GTNewHorizons:StructureLib:1.3.4:dev") {transitive = false}
 }
