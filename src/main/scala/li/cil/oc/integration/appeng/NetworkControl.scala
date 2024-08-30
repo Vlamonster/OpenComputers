@@ -397,7 +397,7 @@ object NetworkControl {
     def isComputing(context: Context, args: Arguments): Array[AnyRef] = result(isComputing)
 
     @Callback(doc = "function():boolean -- Get whether the crafting request has failed.")
-    def hasFailed(context: Context, args: Arguments): Array[AnyRef] = result(failed)
+    def hasFailed(context: Context, args: Arguments): Array[AnyRef] = result(failed, reason)
 
     @Callback(doc = "function():boolean -- Get whether the crafting request has been canceled.")
     def isCanceled(context: Context, args: Arguments): Array[AnyRef] = {
