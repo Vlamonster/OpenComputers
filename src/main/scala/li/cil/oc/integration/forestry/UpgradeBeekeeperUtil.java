@@ -3,8 +3,8 @@ package li.cil.oc.integration.forestry;
 import cpw.mods.fml.common.Loader;
 import forestry.api.apiculture.IBeeHousing;
 import gregtech.api.metatileentity.BaseMetaTileEntity;
-import gregtech.api.util.GT_Utility;
-import gregtech.common.tileentities.machines.basic.GT_MetaTileEntity_IndustrialApiary;
+import gregtech.api.util.GTUtility;
+import gregtech.common.tileentities.machines.basic.MTEIndustrialApiary;
 import li.cil.oc.util.BlockPosition;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -39,13 +39,13 @@ public final class UpgradeBeekeeperUtil {
         if (!(te instanceof BaseMetaTileEntity))
             return null;
         BaseMetaTileEntity mte = (BaseMetaTileEntity)te;
-        if (!(mte.getMetaTileEntity() instanceof GT_MetaTileEntity_IndustrialApiary))
+        if (!(mte.getMetaTileEntity() instanceof MTEIndustrialApiary))
             return null;
         return (IBeeHousing)mte.getMetaTileEntity();
     }
 
     /** Returns a Tile Entity for Industrial Apiaries at position pos, or null if none exist */
-    public static GT_MetaTileEntity_IndustrialApiary getGTIApiaryAt(BlockPosition pos) {
+    public static MTEIndustrialApiary getGTIApiaryAt(BlockPosition pos) {
         if (!GT_LOADED || pos.world().isEmpty())
             return null;
 
@@ -56,9 +56,9 @@ public final class UpgradeBeekeeperUtil {
         if (!(te instanceof BaseMetaTileEntity))
             return null;
         BaseMetaTileEntity mte = (BaseMetaTileEntity)te;
-        if (!(mte.getMetaTileEntity() instanceof GT_MetaTileEntity_IndustrialApiary))
+        if (!(mte.getMetaTileEntity() instanceof MTEIndustrialApiary))
             return null;
-        return (GT_MetaTileEntity_IndustrialApiary)mte.getMetaTileEntity();
+        return (MTEIndustrialApiary)mte.getMetaTileEntity();
     }
 
     public static boolean swapQueen(BlockPosition pos, IInventory hostInv, int slot) {
@@ -88,11 +88,11 @@ public final class UpgradeBeekeeperUtil {
     public static int getMaxIndustrialUpgradeCount() {
         if (!GT_LOADED)
             return 0;
-        return GT_MetaTileEntity_IndustrialApiary.getMaxUpgradeCount();
+        return MTEIndustrialApiary.getMaxUpgradeCount();
     }
 
     public static int addIndustrialUpgrade(BlockPosition pos, IInventory hostInv, int slot, int amount) {
-        GT_MetaTileEntity_IndustrialApiary iapiary = getGTIApiaryAt(pos);
+        MTEIndustrialApiary iapiary = getGTIApiaryAt(pos);
         if (iapiary == null || amount <= 0)
             return 0;
 
@@ -113,7 +113,7 @@ public final class UpgradeBeekeeperUtil {
     public static ItemStack getIndustrialUpgrade(BlockPosition pos, int index){
         if (index < 1 || index > getMaxIndustrialUpgradeCount())
             return null;
-        GT_MetaTileEntity_IndustrialApiary iapiary = getGTIApiaryAt(pos);
+        MTEIndustrialApiary iapiary = getGTIApiaryAt(pos);
         if (iapiary == null)
             return null;
         return iapiary.getUpgrade(index - 1);
@@ -122,7 +122,7 @@ public final class UpgradeBeekeeperUtil {
     public static int removeIndustrialUpgrade(BlockPosition pos, IInventory hostInv, int slot, int index, int amount) {
         if (index < 1 || index > getMaxIndustrialUpgradeCount() || amount <= 0)
             return 0;
-        GT_MetaTileEntity_IndustrialApiary iapiary = getGTIApiaryAt(pos);
+        MTEIndustrialApiary iapiary = getGTIApiaryAt(pos);
         if (iapiary == null)
             return 0;
 
@@ -153,7 +153,7 @@ public final class UpgradeBeekeeperUtil {
         // Find any stacks to merge with
         for (int i = 0; i < hostInv.getSizeInventory(); i++) {
             ItemStack stackInSlot = hostInv.getStackInSlot(i);
-            if (!GT_Utility.areStacksEqual(stack, stackInSlot))
+            if (!GTUtility.areStacksEqual(stack, stackInSlot))
                 continue;
             insertIntoSlot(hostInv, i, stack);
 
@@ -177,7 +177,7 @@ public final class UpgradeBeekeeperUtil {
         int maxStackSize = Math.min(inv.getInventoryStackLimit(), stack.getMaxStackSize());
         if (stackInSlot == null) {
             inv.setInventorySlotContents(slot, stack.splitStack(Math.min(maxStackSize, stack.stackSize)));
-        } else if (GT_Utility.areStacksEqual(stack, stackInSlot)) {
+        } else if (GTUtility.areStacksEqual(stack, stackInSlot)) {
             int toMove = Math.min(stack.stackSize, Math.max(0, maxStackSize - stackInSlot.stackSize));
             if (toMove > 0) {
                 stackInSlot.stackSize += toMove;
