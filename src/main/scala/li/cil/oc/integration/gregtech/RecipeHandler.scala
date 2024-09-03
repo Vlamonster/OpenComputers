@@ -3,7 +3,7 @@ package li.cil.oc.integration.gregtech
 import java.util
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigValue
-import gregtech.api.enums.GT_Values
+import gregtech.api.enums.GTValues
 import gregtech.api.recipe.RecipeMaps
 import li.cil.oc.common.recipe.Recipes
 import li.cil.oc.common.recipe.Recipes.RecipeException
@@ -32,12 +32,12 @@ object RecipeHandler {
     secondaryInputs match {
       case Some(value) =>
         for (primaryInput <- primaryInputs; secondaryInput <- value) {
-          GT_Values.RA.stdBuilder().itemInputs(primaryInput, secondaryInput).itemOutputs(output).duration(duration)
+          GTValues.RA.stdBuilder().itemInputs(primaryInput, secondaryInput).itemOutputs(output).duration(duration)
             .eut(eu).addTo(RecipeMaps.alloySmelterRecipes)
         }
       case _ =>
         for (primaryInput <- primaryInputs) {
-          GT_Values.RA.stdBuilder().itemInputs(primaryInput).itemOutputs(output).duration(duration)
+          GTValues.RA.stdBuilder().itemInputs(primaryInput).itemOutputs(output).duration(duration)
             .eut(eu).addTo(RecipeMaps.alloySmelterRecipes)
         }
     }
@@ -48,7 +48,7 @@ object RecipeHandler {
     secondaryInputs match {
       case Some(value) =>
         for (primaryInput <- primaryInputs; secondaryInput <- value) {
-          var recipe = GT_Values.RA.stdBuilder().itemInputs(primaryInput, secondaryInput)
+          var recipe = GTValues.RA.stdBuilder().itemInputs(primaryInput, secondaryInput)
           fluidInput match {
             case Some(fluidStack) =>
               recipe = recipe.fluidInputs(fluidStack)
@@ -58,7 +58,7 @@ object RecipeHandler {
         }
       case _ =>
         for (primaryInput <- primaryInputs) {
-          var recipe = GT_Values.RA.stdBuilder().itemInputs(primaryInput)
+          var recipe = GTValues.RA.stdBuilder().itemInputs(primaryInput)
           fluidInput match {
             case Some(fluidStack) =>
               recipe = recipe.fluidInputs(fluidStack)
@@ -72,7 +72,7 @@ object RecipeHandler {
   def addGTBenderRecipe(output: ItemStack, recipe: Config) {
     val (primaryInputs, _, _, _, _, eu, duration) = parseRecipe(output, recipe)
     for (primaryInput <- primaryInputs) {
-      GT_Values.RA.stdBuilder().itemInputs(primaryInput).itemOutputs(output).duration(duration).eut(eu)
+      GTValues.RA.stdBuilder().itemInputs(primaryInput).itemOutputs(output).duration(duration).eut(eu)
         .addTo(RecipeMaps.benderRecipes)
     }
   }
@@ -83,7 +83,7 @@ object RecipeHandler {
     secondaryInputs match {
       case Some(value) =>
         for (primaryInput <- primaryInputs; secondaryInput <- value) {
-          var recipe = GT_Values.RA.stdBuilder().itemInputs(primaryInput, secondaryInput)
+          var recipe = GTValues.RA.stdBuilder().itemInputs(primaryInput, secondaryInput)
           secondaryOutput match {
             case Some(itemStack) =>
               recipe = recipe.itemOutputs(output, itemStack)
@@ -94,7 +94,7 @@ object RecipeHandler {
         }
       case None =>
         for (primaryInput <- primaryInputs) {
-          var recipe = GT_Values.RA.stdBuilder().itemInputs(primaryInput)
+          var recipe = GTValues.RA.stdBuilder().itemInputs(primaryInput)
           secondaryOutput match {
             case Some(itemStack) =>
               recipe = recipe.itemOutputs(output, itemStack)
@@ -111,7 +111,7 @@ object RecipeHandler {
     secondaryInputs match {
       case Some(value) =>
         for (primaryInput <- primaryInputs; secondaryInput <- value) {
-          var recipe = GT_Values.RA.stdBuilder().itemInputs(primaryInput, secondaryInput)
+          var recipe = GTValues.RA.stdBuilder().itemInputs(primaryInput, secondaryInput)
           fluidInput match {
             case Some(fluidStack) =>
               recipe = recipe.fluidInputs(fluidStack)
@@ -126,7 +126,7 @@ object RecipeHandler {
         }
       case _ =>
         for (primaryInput <- primaryInputs) {
-          var recipe = GT_Values.RA.stdBuilder().itemInputs(primaryInput)
+          var recipe = GTValues.RA.stdBuilder().itemInputs(primaryInput)
           fluidInput match {
             case Some(fluidStack) =>
               recipe = recipe.fluidInputs(fluidStack)
@@ -146,7 +146,7 @@ object RecipeHandler {
     val (primaryInputs, _, fluidInput, _, secondaryOutputs, eu, duration) = parseRecipe(output, recipe)
     val secondaryOutput = secondaryOutputs.headOption
     for (primaryInput <- primaryInputs) {
-      var recipe = GT_Values.RA.stdBuilder().itemInputs(primaryInput)
+      var recipe = GTValues.RA.stdBuilder().itemInputs(primaryInput)
       fluidInput match {
         case Some(fluidStack) =>
           recipe = recipe.fluidInputs(fluidStack)
@@ -165,7 +165,7 @@ object RecipeHandler {
   def addGTFluidCannerRecipe(output: ItemStack, recipe: Config) {
     val (primaryInputs, _, fluidInput, fluidOutput, _, eu, duration) = parseRecipe(output, recipe)
     for (primaryInput <- primaryInputs) {
-      var recipe = GT_Values.RA.stdBuilder().itemInputs(primaryInput)
+      var recipe = GTValues.RA.stdBuilder().itemInputs(primaryInput)
       fluidInput match {
         case Some(fluidStack) =>
           recipe = recipe.fluidInputs(fluidStack)
@@ -185,7 +185,7 @@ object RecipeHandler {
     secondaryInputs match {
       case Some(value) =>
         for (primaryInput <- primaryInputs; secondaryInput <- value) {
-          GT_Values.RA.stdBuilder().itemInputs(primaryInput, secondaryInput).itemOutputs(output).duration(duration)
+          GTValues.RA.stdBuilder().itemInputs(primaryInput, secondaryInput).itemOutputs(output).duration(duration)
             .eut(eu).addTo(RecipeMaps.formingPressRecipes)
         }
       //all values required
@@ -197,7 +197,7 @@ object RecipeHandler {
     val (primaryInputs, _, _, _, secondaryOutputs, eu, duration) = parseRecipe(output, recipe)
     val secondaryOutput = secondaryOutputs.headOption
     for (primaryInput <- primaryInputs) {
-      var recipe = GT_Values.RA.stdBuilder().itemInputs(primaryInput)
+      var recipe = GTValues.RA.stdBuilder().itemInputs(primaryInput)
       secondaryOutput match {
         case Some(itemStack) =>
           recipe = recipe.itemOutputs(output, itemStack)
@@ -213,7 +213,7 @@ object RecipeHandler {
     secondaryInputs match {
       case Some(value) =>
         for (primaryInput <- primaryInputs; secondaryInput <- value) {
-          GT_Values.RA.stdBuilder().itemInputs(primaryInput, secondaryInput).itemOutputs(output).duration(duration)
+          GTValues.RA.stdBuilder().itemInputs(primaryInput, secondaryInput).itemOutputs(output).duration(duration)
             .eut(eu).addTo(RecipeMaps.laserEngraverRecipes)
         }
       case _ =>
@@ -223,7 +223,7 @@ object RecipeHandler {
   def addGTWireMillRecipe(output: ItemStack, recipe: Config) {
     val (primaryInputs, _, _, _, _, eu, duration) = parseRecipe(output, recipe)
     for (primaryInput <- primaryInputs) {
-      GT_Values.RA.stdBuilder().itemInputs(primaryInput).itemOutputs(output).duration(duration).eut(eu)
+      GTValues.RA.stdBuilder().itemInputs(primaryInput).itemOutputs(output).duration(duration).eut(eu)
         .addTo(RecipeMaps.wiremillRecipes)
     }
   }

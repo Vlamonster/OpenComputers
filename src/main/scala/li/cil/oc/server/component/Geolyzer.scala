@@ -187,7 +187,7 @@ class Geolyzer(val host: EnvironmentHost) extends prefab.ManagedEnvironment with
   @Callback(doc = """function():table -- Returns GregTech underground fluids information""")
   def scanUndergroundFluids(computer: Context, args: Arguments): Array[AnyRef] = {
     val blockPos = BlockPosition(host)
-    val fluid = gregtech.common.GT_UndergroundOil.undergroundOilReadInformation(new Chunk(host.world, blockPos.x>>4, blockPos.z>>4))
+    val fluid = gregtech.common.UndergroundOil.undergroundOilReadInformation(new Chunk(host.world, blockPos.x>>4, blockPos.z>>4))
     result(Map("type" -> fluid.getLocalizedName, "quantity" -> fluid.amount))
   }
 
