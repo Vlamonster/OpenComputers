@@ -7,5 +7,6 @@ object ModAe2fc  extends ModProxy {
   override def getMod: Mod = Mods.Ae2Fc
   override def initialize(): Unit = {
     Driver.add(ConverterFluidDrop)
+    Driver.add(new ConverterFluidCellInventory)
   }
 }
