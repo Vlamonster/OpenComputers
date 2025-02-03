@@ -7,9 +7,9 @@ dependencies {
 
     compile("com.google.code.findbugs:jsr305:3.0.2")
 
-    compileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-533-GTNH:dev") {transitive = false }
+    compileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-534-GTNH:dev") {transitive = false }
     compileOnly("com.github.GTNewHorizons:EnderStorage:1.7.0:dev") {transitive = false }
-    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.51.105:dev") {transitive = false }
+    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.51.110:dev") {transitive = false }
     compile("com.github.GTNewHorizons:ForestryMC:4.10.1:dev") {transitive = false }
     compileOnly("com.github.GTNewHorizons:Railcraft:9.16.3:dev") {transitive = false }
     compile("com.github.GTNewHorizons:NotEnoughItems:2.7.27-GTNH:dev") {transitive = false }
@@ -46,7 +46,7 @@ dependencies {
     compileOnly("curse.maven:agricraft-225635:2284133") {transitive = false }
     compileOnly("curse.maven:stargatetech-2-226769:2230351") {transitive = false }
 
-    compileOnlyApi("com.github.GTNewHorizons:Angelica:1.0.0-beta30:api") { transitive = false }
+    compileOnlyApi("com.github.GTNewHorizons:Angelica:1.0.0-beta32:api") { transitive = false }
 
     compileOnly(deobf("https://immibis.com/mcmoddl/files/redlogic-59.1.13.jar"))
     compileOnly files("dependencies/ic2classic-api.zip") //curseforge one does NOT work ...
