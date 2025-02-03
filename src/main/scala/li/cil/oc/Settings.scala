@@ -23,6 +23,7 @@ import scala.collection.JavaConverters._
 import scala.collection.convert.WrapAsScala._
 import scala.collection.mutable
 import scala.io.{Codec, Source}
+import scala.util.Try
 import scala.util.matching.Regex
 
 class Settings(val config: Config) {
@@ -639,8 +640,8 @@ object Settings {
       if (fileringRulesPatchVersion.containsVersion(configVersion)) {
         OpenComputers.log.info(s"=> Migrating Internet Card filtering rules. ")
         val cidrPattern = """(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?:/(\d{1,2}))""".r
-        val httpHostWhitelist = patched.getStringList(prefix + "internet.whitelist")
-        val httpHostBlacklist = patched.getStringList(prefix + "internet.blacklist")
+        val httpHostWhitelist = Try(patched.getStringList(prefix + "internet.whitelist")).getOrElse(new java.util.ArrayList[String]())
+        val httpHostBlacklist = Try(patched.getStringList(prefix + "internet.blacklist")).getOrElse(new java.util.ArrayList[String]())
         val internetFilteringRules = mutable.MutableList[String]()
         for (blockedAddress <- httpHostBlacklist) {
           if (cidrPattern.findFirstIn(blockedAddress).isDefined) {
