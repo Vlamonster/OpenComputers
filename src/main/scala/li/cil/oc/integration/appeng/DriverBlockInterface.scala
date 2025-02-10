@@ -116,6 +116,7 @@ object DriverBlockInterface extends DriverSidedTileEntity {
         throw new IllegalArgumentException("Invalid index!")
       val stackNBT = nbt.getCompoundTagAt(index)
       val stack = ItemStack.loadItemStackFromNBT(stackNBT)
+      stack.stackSize = 1;
       DatabaseAccess.withDatabase(node, args.checkString(2), database => {
         val slot = args.optSlot(database.data, 3, 0)
         database.setStackInSlot(slot, stack)
