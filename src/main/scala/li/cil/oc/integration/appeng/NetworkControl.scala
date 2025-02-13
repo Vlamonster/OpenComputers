@@ -13,6 +13,7 @@ import appeng.api.util.AECableType
 import appeng.me.cluster.implementations.CraftingCPUCluster
 import appeng.me.helpers.IGridProxyable
 import appeng.tile.crafting.TileCraftingMonitorTile
+import appeng.util.IterationCounter
 import appeng.util.item.AEItemStack
 import com.google.common.collect.ImmutableSet
 import li.cil.oc.OpenComputers
@@ -31,13 +32,14 @@ import li.cil.oc.util.DatabaseAccess
 import li.cil.oc.util.ExtendedArguments._
 import li.cil.oc.util.ExtendedNBT._
 import li.cil.oc.util.ResultWrapper._
-import net.minecraft.item.Item
-import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.item.{Item, ItemStack}
+import net.minecraft.nbt.{JsonToNBT, NBTTagCompound}
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.common.DimensionManager
 import net.minecraftforge.common.util.Constants.NBT
 import net.minecraftforge.common.util.ForgeDirection
 
+import javax.annotation.Nonnull
 import scala.collection.convert.WrapAsJava._
 import scala.collection.convert.WrapAsScala._
 import scala.collection.mutable
@@ -53,6 +55,7 @@ trait NetworkControl[AETile >: Null <: TileEntity with IGridProxyable with IActi
   def node: Node
 
   private def allItems: Iterable[IAEItemStack] = tile.getProxy.getStorage.getItemInventory.getStorageList
+  private def getAvailableItem(@Nonnull request: IAEItemStack, iteration: Int): IAEItemStack = tile.getProxy.getStorage.getItemInventory.getAvailableItem(request, iteration)
   private def allCraftables: Iterable[IAEItemStack] = allItems.collect{ case aeItem if aeItem.isCraftable => aeCraftItem(aeItem, tile) }
 
   @Callback(doc = "function():table -- Get a list of tables representing the available CPUs in the network.")
@@ -91,6 +94,25 @@ trait NetworkControl[AETile >: Null <: TileEntity with IGridProxyable with IActi
       .map(item => convert(item, tile))
       .filter(hash => matches(hash, filter))
       .toArray)
+  }
+
+  @Callback(doc = "function(name:string[, damage:number[, nbt:string]]):table -- Retrieves the stored item in the network by its unlocalized name.")
+  def getItemInNetwork(context: Context, args: Arguments): Array[AnyRef] = {
+    val item = Item.itemRegistry.getObject(args.checkString(0))
+    if (item == null) {
+      return result(null)
+    }
+
+    val itemStack = new ItemStack(item.asInstanceOf[Item])
+    itemStack.setItemDamage(args.optInteger(1, 0))
+
+    // The obfuscated method turns a json string into an NBTBase.
+    val nbtBase = JsonToNBT.func_150315_a(args.optString(2, "{}"))
+    itemStack.setTagCompound(nbtBase.asInstanceOf[NBTTagCompound])
+
+    val aeItemStack = AEItemStack.create(itemStack)
+    val availableItem = getAvailableItem(aeItemStack, IterationCounter.fetchNewId())
+    result(if (availableItem != null) convert(availableItem, tile) else null)
   }
 
   @Callback(doc = "function(filter:table):table -- Get a list of the stored items in the network matching the filter. Filter is an Array of Item IDs")
