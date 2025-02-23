@@ -55,7 +55,7 @@ object Transposer {
       result
     }
 
-    override def fluidTransferRate(): Int = 1024
+    override def fluidTransferRate(): Int = host.info.fluidTransferRate
   }
 
   class Upgrade(val host: EnvironmentHost) extends Common {
@@ -63,7 +63,25 @@ object Transposer {
 
     override def position = BlockPosition(host)
 
-    override def fluidTransferRate(): Int = 1024
+    override def fluidTransferRate(): Int = {
+      host match {
+        case microcontroller: tileentity.Microcontroller =>
+          microcontroller
+            .info
+            .components
+            .find(_.isItemEqual(api.Items.get("transposer").createItemStack(1)))
+            .map(_.getTagCompound.getInteger("oc:fluidTransferRate"))
+            .getOrElse(0)
+        case robot: tileentity.Robot =>
+          robot
+            .info
+            .components
+            .find(_.isItemEqual(api.Items.get("transposer").createItemStack(1)))
+            .map(_.getTagCompound.getInteger("oc:fluidTransferRate"))
+            .getOrElse(0)
+        case _ => 0
+      }
+    }
   }
 
 }
