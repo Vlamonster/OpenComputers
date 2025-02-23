@@ -13,6 +13,8 @@ trait InventoryTransfer extends traits.WorldAware with traits.SideRestricted {
   // Return None on success, else Some("failure reason")
   def onTransferContents(): Option[String]
 
+  def fluidTransferRate(): Int;
+
   @Callback(doc = """function(sourceSide:number, sinkSide:number[, count:number[, sourceSlot:number[, sinkSlot:number]]]):number -- Transfer some items between two inventories.""")
   def transferItem(context: Context, args: Arguments): Array[AnyRef] = {
     val sourceSide = checkSideForAction(args, 0)
@@ -55,7 +57,7 @@ trait InventoryTransfer extends traits.WorldAware with traits.SideRestricted {
         result(Unit, reason)
       case _ =>
         val moved = FluidUtils.transferBetweenFluidHandlersAt(sourcePos, sourceSide.getOpposite, sinkPos, sinkSide.getOpposite, count, sourceTank)
-        if (moved > 0) context.pause(moved / Settings.get.transposerFluidTransferRate) // Allow up to 16 buckets per second.
+        if (moved > 0) context.pause(moved / fluidTransferRate()) // Allow up to 16 buckets per second.
         result(moved > 0, moved)
     }
   }

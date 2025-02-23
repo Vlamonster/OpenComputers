@@ -54,12 +54,16 @@ object Transposer {
       if (result.isEmpty) ServerPacketSender.sendTransposerActivity(host)
       result
     }
+
+    override def fluidTransferRate(): Int = 1024
   }
 
   class Upgrade(val host: EnvironmentHost) extends Common {
     node.setVisibility(Visibility.Neighbors)
 
     override def position = BlockPosition(host)
+
+    override def fluidTransferRate(): Int = 1024
   }
 
 }

@@ -5,12 +5,19 @@ import cpw.mods.fml.relauncher.SideOnly
 import li.cil.oc.Settings
 import li.cil.oc.client.Textures
 import li.cil.oc.common.tileentity
+import li.cil.oc.integration.util.NEI
 import net.minecraft.client.renderer.texture.IIconRegister
+import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.ItemStack
+import net.minecraft.util.MovingObjectPosition
 import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 
-class Transposer extends SimpleBlock {
+import scala.reflect.ClassTag
+
+class Transposer(protected implicit val tileTag: ClassTag[tileentity.Transposer]) extends SimpleBlock with traits.CustomDrops[tileentity.Transposer] {
   override protected def customTextures = Array(
     Some("TransposerTop"),
     Some("TransposerTop"),
@@ -33,4 +40,22 @@ class Transposer extends SimpleBlock {
   override def hasTileEntity(metadata: Int) = true
 
   override def createTileEntity(world: World, metadata: Int) = new tileentity.Transposer()
+
+  override def getPickBlock(target: MovingObjectPosition, world: World, x: Int, y: Int, z: Int, entityPlayer: EntityPlayer) =
+    world.getTileEntity(x, y, z) match {
+      case transposer: tileentity.Transposer => transposer.info.copyItemStack()
+      case _ => null
+    }
+
+  override protected def doCustomInit(tileEntity: tileentity.Transposer, player: EntityLivingBase, stack: ItemStack): Unit = {
+    super.doCustomInit(tileEntity, player, stack)
+    if (!tileEntity.world.isRemote) {
+      tileEntity.info.load(stack)
+    }
+  }
+
+  override protected def doCustomDrops(tileEntity: tileentity.Transposer, player: EntityPlayer, willHarvest: Boolean): Unit = {
+    super.doCustomDrops(tileEntity, player, willHarvest)
+    dropBlockAsItem(tileEntity.world, tileEntity.x, tileEntity.y, tileEntity.z, tileEntity.info.createItemStack())
+  }
 }
