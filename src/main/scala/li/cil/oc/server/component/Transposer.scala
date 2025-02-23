@@ -70,14 +70,14 @@ object Transposer {
             .info
             .components
             .find(_.isItemEqual(api.Items.get(Constants.BlockName.Transposer).createItemStack(1)))
-            .map(_.getTagCompound.getInteger("oc:fluidTransferRate"))
+            .map(_.getTagCompound.getInteger(Settings.namespace + "fluidTransferRate"))
             .getOrElse(0)
         case robot: tileentity.Robot =>
           robot
             .info
             .components
             .find(_.isItemEqual(api.Items.get(Constants.BlockName.Transposer).createItemStack(1)))
-            .map(_.getTagCompound.getInteger("oc:fluidTransferRate"))
+            .map(_.getTagCompound.getInteger(Settings.namespace + "fluidTransferRate"))
             .getOrElse(0)
         case _ => 0
       }

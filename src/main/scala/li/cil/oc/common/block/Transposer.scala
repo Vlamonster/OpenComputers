@@ -15,6 +15,7 @@ import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 
+import java.util
 import scala.reflect.ClassTag
 
 class Transposer(protected implicit val tileTag: ClassTag[tileentity.Transposer]) extends SimpleBlock with traits.CustomDrops[tileentity.Transposer] {
@@ -57,5 +58,17 @@ class Transposer(protected implicit val tileTag: ClassTag[tileentity.Transposer]
   override protected def doCustomDrops(tileEntity: tileentity.Transposer, player: EntityPlayer, willHarvest: Boolean): Unit = {
     super.doCustomDrops(tileEntity, player, willHarvest)
     dropBlockAsItem(tileEntity.world, tileEntity.x, tileEntity.y, tileEntity.z, tileEntity.info.createItemStack())
+  }
+
+  override protected def tooltipBody(metadata: Int, stack: ItemStack, player: EntityPlayer, tooltip: util.List[String], advanced: Boolean): Unit = {
+    val tag = stack.getTagCompound
+    val transferRate =
+      if (tag != null && tag.hasKey(Settings.namespace + "fluidTransferRate"))
+        tag.getInteger(Settings.namespace + "fluidTransferRate")
+      else
+        Settings.get.transposerFluidTransferRate
+
+    tooltip.add(s"Transfers up to ${transferRate}L/s.")
+    super.tooltipBody(metadata, stack, player, tooltip, advanced)
   }
 }
