@@ -55,7 +55,6 @@ trait InventoryTransfer extends traits.WorldAware with traits.SideRestricted {
         result(Unit, reason)
       case _ =>
         val moved = FluidUtils.transferBetweenFluidHandlersAt(sourcePos, sourceSide.getOpposite, sinkPos, sinkSide.getOpposite, count, sourceTank)
-        if (moved > 0) context.pause(moved / Settings.get.transposerFluidTransferRate) // Allow up to 16 buckets per second.
         result(moved > 0, moved)
     }
   }
