@@ -65,4 +65,9 @@ trait InventoryTransfer extends traits.WorldAware with traits.SideRestricted {
         result(moved > 0, moved)
     }
   }
+
+  @Callback(doc = """function():number -- Returns the fluid transfer rate in liters per second.""")
+  def getFluidTransferRate(context: Context, args: Arguments): Array[AnyRef] = {
+    result(fluidTransferRate())
+  }
 }
