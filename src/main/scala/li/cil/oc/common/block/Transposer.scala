@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.SideOnly
 import li.cil.oc.Settings
 import li.cil.oc.client.Textures
 import li.cil.oc.common.tileentity
-import li.cil.oc.integration.util.NEI
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
@@ -15,6 +14,7 @@ import net.minecraft.world.IBlockAccess
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 
+import java.text.NumberFormat
 import java.util
 import scala.reflect.ClassTag
 
@@ -68,7 +68,7 @@ class Transposer(protected implicit val tileTag: ClassTag[tileentity.Transposer]
       else
         Settings.get.transposerFluidTransferRate
 
-    tooltip.add(s"Transfers up to ${transferRate}L/s.")
+    tooltip.add(s"Transfers up to ${NumberFormat.getIntegerInstance.format(transferRate)}L/s.")
     super.tooltipBody(metadata, stack, player, tooltip, advanced)
   }
 }
