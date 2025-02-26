@@ -1,6 +1,5 @@
 package li.cil.oc.server.component.traits
 
-import li.cil.oc.Settings
 import li.cil.oc.api.machine.Arguments
 import li.cil.oc.api.machine.Callback
 import li.cil.oc.api.machine.Context
@@ -61,7 +60,8 @@ trait InventoryTransfer extends traits.WorldAware with traits.SideRestricted {
           return result(Unit, "device has fluid transfer rate of 0")
         }
         val moved = FluidUtils.transferBetweenFluidHandlersAt(sourcePos, sourceSide.getOpposite, sinkPos, sinkSide.getOpposite, count, sourceTank)
-        if (moved > 0) context.pause(moved / fluidTransferRate)
+        val delay = moved.toDouble / fluidTransferRate.toDouble - 0.05
+        if (delay > 0) context.pause(delay)
         result(moved > 0, moved)
     }
   }
